@@ -7,8 +7,25 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-namespace GenaratePath
+namespace GeneratePath
 {
+    class Pos
+    {
+        public int x;
+        public int y;
+
+        public Pos()
+        {
+            x = y = 0;
+        }
+
+        public Pos(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+    }
+    
     class Map
     {
         byte[] map;         // 地図データ（0:障害物なし or 1：障害物あり）

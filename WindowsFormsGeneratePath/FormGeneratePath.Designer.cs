@@ -1,13 +1,13 @@
-﻿namespace GenaratePath
+﻿namespace WindowsFormsGeneratePath
 {
-    partial class PictureBoxMap
+    partial class FormGeneratePath
     {
-        /// <summary> 
+        /// <summary>
         /// 必要なデザイナ変数です。
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// 使用中のリソースをすべてクリーンアップします。
         /// </summary>
         /// <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
@@ -20,18 +20,28 @@
             base.Dispose(disposing);
         }
 
-        #region コンポーネント デザイナで生成されたコード
+        #region Windows フォーム デザイナで生成されたコード
 
-        /// <summary> 
-        /// デザイナ サポートに必要なメソッドです。このメソッドの内容を 
+        /// <summary>
+        /// デザイナ サポートに必要なメソッドです。このメソッドの内容を
         /// コード エディタで変更しないでください。
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-//            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.SuspendLayout();
+            // 
+            // FormGeneratePath
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Name = "FormGeneratePath";
+            this.Text = "GeneratePath";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
     }
 }
+

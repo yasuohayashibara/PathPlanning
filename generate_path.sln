@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "generate_path", "generate_p
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsAStar", "WindowsFormsAStar\WindowsFormsAStar.csproj", "{73D01579-3700-40D8-894F-6955023C1B1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsGeneratePath", "WindowsFormsGeneratePath\WindowsFormsGeneratePath.csproj", "{7C410084-A20E-4A2C-802E-B6C453ECC183}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,16 @@ Global
 		{73D01579-3700-40D8-894F-6955023C1B1E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{73D01579-3700-40D8-894F-6955023C1B1E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{73D01579-3700-40D8-894F-6955023C1B1E}.Release|Win32.ActiveCfg = Release|Any CPU
+		{7C410084-A20E-4A2C-802E-B6C453ECC183}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C410084-A20E-4A2C-802E-B6C453ECC183}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C410084-A20E-4A2C-802E-B6C453ECC183}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7C410084-A20E-4A2C-802E-B6C453ECC183}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7C410084-A20E-4A2C-802E-B6C453ECC183}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{7C410084-A20E-4A2C-802E-B6C453ECC183}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C410084-A20E-4A2C-802E-B6C453ECC183}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C410084-A20E-4A2C-802E-B6C453ECC183}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7C410084-A20E-4A2C-802E-B6C453ECC183}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7C410084-A20E-4A2C-802E-B6C453ECC183}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
-using GenaratePath;
+using AStarSearch;
+using GeneratePath;
 using System.Drawing.Drawing2D;
 
 namespace WindowsFormsAStar

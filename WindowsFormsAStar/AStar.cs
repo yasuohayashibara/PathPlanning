@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using GeneratePath;
 
-namespace GenaratePath
+namespace AStarSearch
 {
     /// <summary>
     /// ノードのクラス
@@ -62,23 +63,6 @@ namespace GenaratePath
         public double getHeuristic()
         {
             return cost + goal_cost;
-        }
-    }
-
-    class Pos
-    {
-        public int x;
-        public int y;
-
-        public Pos()
-        {
-            x = y = 0;
-        }
-
-        public Pos(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
         }
     }
 
