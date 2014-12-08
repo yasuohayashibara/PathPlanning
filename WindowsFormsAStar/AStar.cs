@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace GenaratePath
 {
@@ -10,10 +11,12 @@ namespace GenaratePath
     /// </summary>
     class Node
     {
-        public int our_num;     // このノードの番号
-        public int pre_num;     // 一つ前のノードの番号
-        public int x;           // x座標
-        public int y;           // y座標
+        public int our_num;         // このノードの番号
+        public int pre_num;         // 一つ前のノードの番号
+        public int x;               // x座標
+        public int y;               // y座標
+        public double cost;         // スタートノードからの最小コストの推定値
+        public double goal_cost;    // ゴールノードまでの最小コストの推定値
 
         /// <summary>
         /// コンストラクタ
@@ -39,6 +42,44 @@ namespace GenaratePath
             this.x = x;
             this.y = y;
         }
+
+        /// <summary>
+        /// ゴールまでの最小コストの推定値を計算する
+        /// </summary>
+        /// <param name="goal_x">ゴールのx座標</param>
+        /// <param name="goal_y">ゴールのy座標</param>
+        /// <returns>ゴールまでの最小コストの推定値</returns>
+        public double calculateGoalCost(int goal_x, int goal_y)
+        {
+            goal_cost = Math.Abs(goal_x - x) + Math.Abs(goal_y - y);
+            return goal_cost;
+        }
+
+        /// <summary>
+        /// ヒューリスティックの取得
+        /// </summary>
+        /// <returns>ヒューリスティック</returns>
+        public double getHeuristic()
+        {
+            return cost + goal_cost;
+        }
+    }
+
+    class Pos
+    {
+        public int x;
+        public int y;
+
+        public Pos()
+        {
+            x = y = 0;
+        }
+
+        public Pos(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
     }
 
     /// <summary>
@@ -53,6 +94,7 @@ namespace GenaratePath
         int start_y;
         int goal_x;
         int goal_y;
+        List<Pos> path;
 
         /// <summary>
         /// コンストラクタ
@@ -74,6 +116,7 @@ namespace GenaratePath
             start_y = 0;
             goal_x = 0;
             goal_y = 0;
+            path = new List<Pos>();
         }
 
         /// <summary>
@@ -160,75 +203,110 @@ namespace GenaratePath
             return false;
         }
 
+        /// <summary>
+        /// 最小のヒューリスティックの番号を戻す
+        /// </summary>
+        /// <param name="node">ノードのリスト</param>
+        /// <returns>最小のヒューリスティックの番号</returns>
+        private int minHeuristic(List<Node> node)
+        {
+            if (node.Count == 0) return -1;                     // ノードが0個の場合は-1を戻す．
+            int min_no = 0;
+            double min_heuristic = node[0].getHeuristic();      // ヒューリスティックの取得
+            for (int i = 1; i < node.Count; i++)
+            {
+                double heuristic = node[i].getHeuristic();
+                if (heuristic < min_heuristic)
+                {
+                    min_heuristic = heuristic;
+                    min_no = i;
+                }
+            }
+            return min_no;
+        }
+
+        /// <summary>
+        /// A Start Search による経路の計算
+        /// </summary>
+        /// <returns>true:経路探索成功，false:失敗</returns>
         public bool calculatePath()
         {
-            List<Node> openList = new List<Node>();
-            List<Node> closeList = new List<Node>();
-            Node start = new Node(start_x, start_y, 0, -1);
-            Node goal = new Node(goal_x, goal_y, 0, 0);
-            Node current = new Node(0, 0, 0, 0);
-            double min_cost = width * height;
-            openList.Add(start);
-            int openListNo = -1;
-            double heuristic = width * height;
+            List<Node> openList = new List<Node>();             // 計算中のノードを格納するためのリスト
+            List<Node> closeList = new List<Node>();            // 計算済みのノードを格納しておくリスト
+            Node start = new Node(start_x, start_y, 0, -1);     // スタートノードを設定
+            Node goal = new Node(goal_x, goal_y, 0, 0);         // ゴールノードを設定
+            start.calculateGoalCost(goal_x, goal_y);            // ゴールまでのコストの推定値を計算
+            start.cost = 0;                                     // スタートからのコストは0
+            openList.Add(start);                                // スタートノードをOpenリストに追加
+            Node current = new Node(0, 0, 0, 0);                // 現在，取り出して計算しているノード
+            int node_no = 1;
             while (true)
             {
-                if (openList.Count == 0) return false;      // ゴールに辿り着くルートが無い
-                for (int i = 0; i < openList.Count; i++)
-                {
-                    heuristic = len(goal.x - openList[i].x, goal.y - openList[i].y);
-                    if (heuristic < min_cost)
-                    {
-                        openListNo = i;
-                        min_cost = heuristic;
-                        current = openList[i];
-                    }
-                }
-                closeList.Add(current);
+                if (openList.Count == 0) return false;          // ゴールに辿り着くルートが無い
+                int min_no = minHeuristic(openList);            // 最小のヒューリスティックのノード番号を取得
+                current = openList[min_no];                     // そのノードを取り出す
+                openList.RemoveAt(min_no);                      // Openリストから削除して，
+                closeList.Add(current);                         // Closeリストに追加する
 
                 // ゴールに到着した場合ループを抜ける
                 if ((current.x == goal.x) && (current.y == goal.y)) break;
-
-                openList.RemoveAt(openListNo);
 
                 for (int y = -1; y <= 1; y++)
                 {
                     for (int x = -1; x <= 1; x++)
                     {
+                        if ((x != 0)&&(y != 0)) continue;
                         int xc = current.x + x;
                         int yc = current.y + y;
-                        int n;
+                        if ((xc >= width) || (xc < 0) || (yc >= height) || (yc < 0)) continue;
                         if (map[yc * width + xc] != 0) continue;    // 障害物があれば次へ
+
+                        Node node = new Node(xc, yc, 0, current.our_num);
+                        double fd = current.cost + node.calculateGoalCost(goal_x, goal_y) + len(x,y);
+                        int n;
                         if (checkExist(openList, xc, yc, out n))
                         {
-                            double h = len(goal.x - xc, goal.y - yc);
-                            if (h < heuristic)
+                            if (fd < openList[n].getHeuristic())
                             {
+                                openList[n].cost = fd - openList[n].goal_cost;
                                 openList[n].pre_num = current.our_num;
                             }
                         }
                         else if (checkExist(closeList, xc, yc, out n))
                         {
-                            double h = len(goal.x - xc, goal.y - yc);
-                            if (h < heuristic)
+                            if (fd < closeList[n].getHeuristic())
                             {
-                                Node node = closeList[n];
-                                node.pre_num = current.our_num;
-                                openList.Add(node);
+                                Node node0 = closeList[n];
+                                node0.cost = fd - closeList[n].goal_cost;
+                                node0.pre_num = current.our_num;
+                                openList.Add(node0);
                                 closeList.RemoveAt(n);
                             }
                         }
                         else
                         {
-                            Node node = new Node(xc, yc, c
+                            Node node1 = new Node(xc, yc, node_no++, current.our_num);
+                            openList.Add(node1);
                         }
                     }
                 }
-
-
-
+            }
+            while (true)
+            {
+                Pos pos = new Pos();
+                pos.x = current.x;
+                pos.y = current.y;
+                path.Add(pos);
+                int n = current.pre_num;
+                if (n == -1) break;
+                current = closeList[current.pre_num];
             }
             return true;
+        }
+
+        public List<Pos> getPath()
+        {
+            return path;
         }
     }
 }

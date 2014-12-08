@@ -12,8 +12,9 @@ namespace GenaratePath
     class Map
     {
         byte[] map;         // 地図データ（0:障害物なし or 1：障害物あり）
-        int width;          // 幅（データの個数）
-        int height;         // 高さ（データの個数）
+        List<Pos> path;
+        public int width;   // 幅（データの個数）
+        public int height;  // 高さ（データの個数）
         double unit;        // グリッドの一辺の距離(m)
 
         /// <summary>
@@ -43,6 +44,7 @@ namespace GenaratePath
             width = 1;
             height = 1;
             unit = 0.01;            // 10mmをデフォルトの単位とする．
+            path = new List<Pos>();
         }
 
         /// <summary>
@@ -87,14 +89,13 @@ namespace GenaratePath
         /// 地図ファイルからビットマップを生成する
         /// </summary>
         /// <returns></returns>
-        public Bitmap getBitmap()
+        public Bitmap getBitmap(int width, int height)
         {
-            Bitmap bmp = new Bitmap(width, height);
-            byte[] image = new byte[width * height * 4];
+            byte[] image = new byte[this.width * this.height * 4];
             int n = 0;
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < this.height; y++)
             {
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < this.width; x++)
                 {
                     if (map[n] == 1)
                     {
@@ -112,13 +113,43 @@ namespace GenaratePath
                     n++;
                 }
             }
+            for (int i = 0; i < path.Count; i++)
+            {
+                int x = path[i].x;
+                int y = path[i].y;
+                n = y * this.width + x;
+                int val = 64 * i / path.Count;
+                image[(n << 2) + 0] = 0;
+                image[(n << 2) + 1] = (byte)(val+192);
+                image[(n << 2) + 2] = 0;
+            }
+
+            Bitmap bmp = new Bitmap(this.width, this.height);
             ByteArrayToBitmap(image, bmp);
-            return bmp;
+
+            Bitmap canvas = new Bitmap(width, height);
+            Graphics g = Graphics.FromImage(canvas);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            g.DrawImage(bmp, 0, 0, width, height);
+            bmp.Dispose();
+            g.Dispose();
+
+            return canvas;
+        }
+
+        public byte[] getData()
+        {
+            return map;
         }
 
         public int getValue(int x, int y)
         {
             return map[y * width + y];
+        }
+
+        public void setPath(List<Pos> path)
+        {
+            this.path = path;
         }
 
         /// <summary>
