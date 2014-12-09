@@ -13,9 +13,9 @@ namespace GeneratePath
         public double x;        // x座標の位置(m)
         public double y;        // y座標の位置(m)
         public double the;      // 角度(rad)
-        public double xd;       // x座標の速度(m/s)
-        public double yd;       // y座標の速度(m/s)
-        public double thed;     // 角速度(rad/s)
+        public double xd;       // 前後方向の速度(m/s)　ロボット座標系
+        public double yd;       // 左右方向の速度(m/s)　ロボット座標系
+        public double thed;     // 角速度(rad/s)　ロボット座標系
 
         /// <summary>
         /// コンストラクタ
@@ -50,9 +50,9 @@ namespace GeneratePath
         /// <summary>
         /// 速度の設定
         /// </summary>
-        /// <param name="xd">x座標の速度(m/s)</param>
-        /// <param name="yd">y座標の速度(m/s)</param>
-        /// <param name="thed">角速度(rad/s)</param>
+        /// <param name="xd">前後方向の速度(m/s)　ロボット座標系</param>
+        /// <param name="yd">左右方向の速度(m/s)　ロボット座標系</param>
+        /// <param name="thed">角速度(rad/s)　ロボット座標系</param>
         public void setVelocity(double xd, double yd, double thed)
         {
             this.xd = xd;
@@ -66,8 +66,10 @@ namespace GeneratePath
         /// <param name="dt">サンプリングタイム(s)</param>
         public void calculatePosition(double dt)
         {
-            x += xd * dt;
-            y += yd * dt;
+            double xdt = xd * Math.Cos(the) - yd * Math.Sin(the);
+            double ydt = xd * Math.Sin(the) + yd * Math.Cos(the);
+            x += xdt * dt;
+            y += ydt * dt;
             the += thed * dt;
         }
     }

@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace GeneratePath
 {
-    class Pos
+    public class Pos
     {
         public int x;
         public int y;

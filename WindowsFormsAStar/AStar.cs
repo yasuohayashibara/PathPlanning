@@ -114,9 +114,9 @@ namespace AStarSearch
             this.width = width;
             this.height = height;
             this.map = new byte[width * height];
-            for (int n = 0; n < width * height; n++)
+            for (int i = 0; i < width * height; i++)
             {
-                this.map[n] = map[n];
+                this.map[i] = map[i];
             }
         }
 

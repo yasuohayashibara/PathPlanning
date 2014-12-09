@@ -48,12 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AStar.cs" />
     <Compile Include="FormGeneratePath.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormGeneratePath.Designer.cs">
       <DependentUpon>FormGeneratePath.cs</DependentUpon>
     </Compile>
+    <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormGeneratePath.resx">
@@ -79,6 +81,12 @@
     </Compile>
     <Compile Include="robotModel.cs" />
     <Compile Include="twoWheel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WindowsFormsAStar\WindowsFormsAStar.csproj">
+      <Project>{73D01579-3700-40D8-894F-6955023C1B1E}</Project>
+      <Name>WindowsFormsAStar</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
