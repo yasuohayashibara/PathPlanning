@@ -26,7 +26,7 @@ namespace GeneratePath
         }
     }
     
-    class Map
+    public class Map
     {
         byte[] map;         // 地図データ（0:障害物なし or 1：障害物あり）
         List<Pos> path;
@@ -60,7 +60,7 @@ namespace GeneratePath
             map = new byte[1];
             width = 1;
             height = 1;
-            unit = 0.01;            // 10mmをデフォルトの単位とする．
+            unit = 0.5;            // 10mmをデフォルトの単位とする．
             path = new List<Pos>();
         }
 

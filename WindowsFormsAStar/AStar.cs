@@ -210,6 +210,21 @@ namespace AStarSearch
         }
 
         /// <summary>
+        /// our_numがnumberであるノードのインデックスを戻す
+        /// </summary>
+        /// <param name="node">探索するノード</param>
+        /// <param name="number">our_numの値</param>
+        /// <returns>インデックス</returns>
+        private int getIndex(List<Node> node, int number)
+        {
+            for (int i = 0; i < node.Count; i++)
+            {
+                if (node[i].our_num == number) return i;
+            }
+            return -1;
+        }
+
+        /// <summary>
         /// A Start Search による経路の計算
         /// </summary>
         /// <returns>true:経路探索成功，false:失敗</returns>
@@ -270,6 +285,8 @@ namespace AStarSearch
                         else
                         {
                             Node node1 = new Node(xc, yc, node_no++, current.our_num);
+                            node1.calculateGoalCost(goal_x, goal_y);
+                            node1.cost = fd - node1.goal_cost;
                             openList.Add(node1);
                         }
                     }
@@ -283,7 +300,7 @@ namespace AStarSearch
                 path.Add(pos);
                 int n = current.pre_num;
                 if (n == -1) break;
-                current = closeList[current.pre_num];
+                current = closeList[getIndex(closeList, current.pre_num)];
             }
             return true;
         }

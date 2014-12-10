@@ -7,12 +7,12 @@ namespace GeneratePath
 {
     class twoWheel : robotModel
     {
-        public double velocity_left;            // 左車輪の速度(m/s)
-        public double velocity_right;           // 右車輪の速度(m/s)
-        public double acceleration;             // 左車輪の加速度(m/s^2)
-        public const double TREAD = 0.280;      // トレッド(m)
-        public double MAX_VELOCITY = 0.5;       // 最大速度(m/s)
-        public double MAX_ACCELERATION = 0.5;   // 最大加速度(m/s^2)
+        public double velocity_left;                // 左車輪の速度(m/s)
+        public double velocity_right;               // 右車輪の速度(m/s)
+        public double acceleration;                 // 左車輪の加速度(m/s^2)
+        public const double TREAD = 0.280;          // トレッド(m)
+        public const double MAX_VELOCITY = 0.5;     // 最大速度(m/s)
+        public const double MAX_ACCELERATION = 0.5; // 最大加速度(m/s^2)
         
         /// <summary>
         /// コンストラクタ
@@ -20,6 +20,17 @@ namespace GeneratePath
         public twoWheel()
         {
             Initialize();
+        }
+
+        /// <summary>
+        /// コピーコンストラクタ
+        /// </summary>
+        /// <param name="source">コピー元のコンストラクタ</param>
+        public twoWheel(twoWheel source) : base(source)
+        {
+            this.velocity_right = source.velocity_right;
+            this.velocity_left = source.velocity_left;
+            this.acceleration = source.acceleration;
         }
 
         /// <summary>
@@ -69,6 +80,9 @@ namespace GeneratePath
         /// <param name="dt">サンプリングタイム(m/s)</param>
         public void calculatePosition(double velocity_left, double velocity_right, double dt)
         {
+            velocity_left = limitAbs(velocity_left, MAX_VELOCITY);
+            velocity_right = limitAbs(velocity_right, MAX_VELOCITY);
+
             double leftVelocityDiff = velocity_left - this.velocity_left;       // 左車輪の速度差
             double rightVelocityDiff = velocity_right - this.velocity_right;    // 右車輪の速度差
             double velocityDiffMax = acceleration * dt;                         // 速度差の最大値

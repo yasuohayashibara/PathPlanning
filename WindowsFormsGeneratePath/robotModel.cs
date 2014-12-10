@@ -26,6 +26,19 @@ namespace GeneratePath
         }
 
         /// <summary>
+        /// コピーコンストラクタ
+        /// </summary>
+        public robotModel(robotModel source)
+        {
+            x = source.x;
+            y = source.y;
+            the = source.the;
+            xd = source.xd;
+            yd = source.yd;
+            thed = source.thed;
+        }
+
+        /// <summary>
         /// 初期化
         /// </summary>
         public virtual void Initialize()

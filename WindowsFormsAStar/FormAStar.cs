@@ -21,7 +21,7 @@ namespace WindowsFormsAStar
         public FormAStar()
         {
             InitializeComponent();
-            map.loadMap("..\\..\\..\\map.bmp", 0.01);
+            map.loadMap("..\\..\\..\\map.bmp", 0.5);
             astar.setMap(map.getData(), map.width, map.height);
             astar.setStartPosition(0, 5);
             astar.setGoalPosition(map.width - 1, map.height - 1);

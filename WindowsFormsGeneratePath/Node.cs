@@ -11,16 +11,17 @@ namespace GeneratePath
         public int pre_num;         // 一つ前のノードの番号
         public double cost;         // スタートノードからの最小コストの推定値
         public double goal_cost;    // ゴールノードまでの最小コストの推定値
-        twoWheel robot;             // メガローバ
+        public twoWheel robot;             // メガローバ
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public Node(double x, double y, double the, double xd, double yd, double thed, int our_num, int pre_num)
+        public Node(double x, double y, double the, double velocity_left, double velocity_right, int our_num, int pre_num)
         {
             robot = new twoWheel();
             robot.setPosition(x, y, the);
-            robot.setVelocity(xd, yd, thed);
+            robot.velocity_left = velocity_left;
+            robot.velocity_right = velocity_right;
             this.our_num = our_num;
             this.pre_num = pre_num;
         }
@@ -44,6 +45,19 @@ namespace GeneratePath
         public double getHeuristic()
         {
             return cost + goal_cost;
+        }
+
+        /// <summary>
+        /// 距離の計算
+        /// </summary>
+        /// <param name="x">比較する位置のx座標(m)</param>
+        /// <param name="y">比較する位置のx座標(m)</param>
+        /// <returns>距離(m)</returns>
+        public double getLength(double x, double y)
+        {
+            double dx = x - robot.x;
+            double dy = y - robot.y;
+            return Math.Sqrt(dx * dx + dy * dy);
         }
     }
 }
