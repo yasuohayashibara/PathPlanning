@@ -34,7 +34,13 @@ namespace GeneratePath
         /// <returns>ゴールまでの最小コストの推定値</returns>
         public double calculateGoalCost(double goal_x, double goal_y)
         {
-            goal_cost = Math.Abs(goal_x - robot.x) + Math.Abs(goal_y - robot.y);
+//            goal_cost = Math.Abs(goal_x - robot.x) + Math.Abs(goal_y - robot.y);
+            double xd = goal_x - robot.x;
+            double yd = goal_y - robot.y;
+            double goal_the = Math.Atan2(yd, xd);
+            double thed = goal_the - robot.the;
+//            thed *= 5;
+            goal_cost = Math.Sqrt(xd * xd + yd * yd + thed * thed);
             return goal_cost;
         }
 

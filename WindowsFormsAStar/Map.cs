@@ -25,14 +25,40 @@ namespace GeneratePath
             this.y = y;
         }
     }
+
+    public class PosVel
+    {
+        public double x;
+        public double y;
+        public double the;
+        public double xd;
+        public double yd;
+        public double thed;
+
+        public PosVel()
+        {
+            x = y = the = xd = yd = thed = 0;
+        }
+
+        public PosVel(double x, double y, double the, double xd, double yd, double thed)
+        {
+            this.x = x;
+            this.y = y;
+            this.the = the;
+            this.xd = xd;
+            this.yd = yd;
+            this.thed = thed;
+        }
+    }
     
     public class Map
     {
         byte[] map;         // 地図データ（0:障害物なし or 1：障害物あり）
         List<Pos> path;
+        List<PosVel> pathWithVel;
         public int width;   // 幅（データの個数）
         public int height;  // 高さ（データの個数）
-        double unit;        // グリッドの一辺の距離(m)
+        public double unit;        // グリッドの一辺の距離(m)
 
         /// <summary>
         /// コンストラクタ
@@ -141,6 +167,17 @@ namespace GeneratePath
                 image[(n << 2) + 2] = 0;
             }
 
+            for (int i = 0; i < pathWithVel.Count; i++)
+            {
+                int x = (int)(pathWithVel[i].x / unit);
+                int y = (int)(pathWithVel[i].y / unit);
+                n = y * this.width + x;
+                int val = 64 * i / pathWithVel.Count;
+                image[(n << 2) + 0] = 0;
+                image[(n << 2) + 1] = (byte)(val + 192);
+                image[(n << 2) + 2] = 0;
+            }
+
             Bitmap bmp = new Bitmap(this.width, this.height);
             ByteArrayToBitmap(image, bmp);
 
@@ -167,6 +204,11 @@ namespace GeneratePath
         public void setPath(List<Pos> path)
         {
             this.path = path;
+        }
+
+        public void setPath(List<PosVel> path)
+        {
+            this.pathWithVel = path;
         }
 
         /// <summary>

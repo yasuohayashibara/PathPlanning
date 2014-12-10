@@ -6,32 +6,7 @@ using GeneratePath;
 using System.Diagnostics;
 
 namespace GeneratePath
-{
-    public class PosVel
-    {
-        public double x;
-        public double y;
-        public double the;
-        public double xd;
-        public double yd;
-        public double thed;
-
-        public PosVel()
-        {
-            x = y = the = xd = yd = thed = 0;
-        }
-
-        public PosVel(double x, double y, double the, double xd, double yd, double thed)
-        {
-            this.x = x;
-            this.y = y;
-            this.the = the;
-            this.xd = xd;
-            this.yd = yd;
-            this.thed = thed;
-        }
-    }
-        
+{        
     class AStar
     {
         byte[] map;         // 地図データ
@@ -78,7 +53,7 @@ namespace GeneratePath
             goal_radius = 0.1;
             left_velocity_d = 0.05;
             right_velocity_d = 0.05;
-            sampling_time = 0.1;
+            sampling_time = 0.5;
         }
 
         /// <summary>
@@ -226,6 +201,21 @@ namespace GeneratePath
         }
 
         /// <summary>
+        /// our_numがnumberであるノードのインデックスを戻す
+        /// </summary>
+        /// <param name="node">探索するノード</param>
+        /// <param name="number">our_numの値</param>
+        /// <returns>インデックス</returns>
+        private int getIndex(List<Node> node, int number)
+        {
+            for (int i = 0; i < node.Count; i++)
+            {
+                if (node[i].our_num == number) return i;
+            }
+            return -1;
+        }
+
+        /// <summary>
         /// A Start Search による経路の計算
         /// </summary>
         /// <returns>true:経路探索成功，false:失敗</returns>
@@ -240,7 +230,7 @@ namespace GeneratePath
             start.calculateGoalCost(goal_x, goal_y);            // ゴールまでのコストの推定値を計算
             start.cost = 0;                                     // スタートからのコストは0
             openList.Add(start);                                // スタートノードをOpenリストに追加
-            Node current = new Node(0, 0, 0, 0, 0, 0, 0);    // 現在，取り出して計算しているノード
+            Node current = new Node(0, 0, 0, 0, 0, 0, 0);       // 現在，取り出して計算しているノード
             int node_no = 1;
             while (true)
             {
@@ -263,12 +253,15 @@ namespace GeneratePath
                         
                         twoWheel robot = new twoWheel(current.robot);
                         robot.calculatePosition(velocity_left, velocity_right, sampling_time);
-                        Debug.Write(robot.x.ToString() + " , " + robot.y.ToString() + "\n");
+                        Debug.Write("(" + robot.x.ToString() + ", " + robot.y.ToString() + ") (" + robot.velocity_left.ToString() + ", " + robot.velocity_right.ToString() + ")\n");
                         if ((robot.x >= max_x) || (robot.x < 0) || (robot.y >= max_y) || (robot.y < 0)) continue;
                         if (getMapData(robot.x, robot.y) != 0) continue;
 
                         Node node = new Node(robot.x, robot.y, robot.the, robot.velocity_left, robot.velocity_right, 0, current.our_num);
-                        double fd = current.cost + node.calculateGoalCost(goal_x, goal_y) + 0.0 * 0.1 + 0.05 * 0.1;
+                        double xd = robot.x - current.robot.x;
+                        double yd = robot.y - current.robot.y;
+                        double fd = current.cost + node.calculateGoalCost(goal_x, goal_y) + 0.5 * 0.1;
+//                            + Math.Sqrt(xd * xd + yd * yd) * 0.9;
                         int n;
                         if (checkExist(openList, robot.x, robot.y, robot.the, robot.velocity_left, robot.velocity_right, out n))
                         {
@@ -295,8 +288,9 @@ namespace GeneratePath
                         {
                             Node node1 = new Node(robot.x, robot.y, robot.the, robot.velocity_left, robot.velocity_right, node_no++, current.our_num);
                             node1.calculateGoalCost(goal_x, goal_y);
-                            Debug.Write(node_no.ToString() + "\n");
+                            node1.cost = fd - node1.goal_cost;
                             openList.Add(node1);
+                            Debug.Write(node_no.ToString() + "\n");
                         }
                     }
                 }
@@ -314,7 +308,8 @@ namespace GeneratePath
                 path.Add(pos);
                 int n = current.pre_num;
                 if (n == -1) break;
-                current = closeList[current.pre_num];
+                int index = getIndex(closeList, current.pre_num);
+                current = closeList[index];
             }
             return true;
         }

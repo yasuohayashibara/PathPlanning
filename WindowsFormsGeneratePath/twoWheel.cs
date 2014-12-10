@@ -11,7 +11,7 @@ namespace GeneratePath
         public double velocity_right;               // 右車輪の速度(m/s)
         public double acceleration;                 // 左車輪の加速度(m/s^2)
         public const double TREAD = 0.280;          // トレッド(m)
-        public const double MAX_VELOCITY = 0.5;     // 最大速度(m/s)
+        public const double MAX_VELOCITY = 1.0;     // 最大速度(m/s)
         public const double MAX_ACCELERATION = 0.5; // 最大加速度(m/s^2)
         
         /// <summary>
