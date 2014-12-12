@@ -200,6 +200,11 @@ namespace GeneratePath
             return map[y * width + y];
         }
 
+        public void setValue(int x, int y, byte value)
+        {
+            map[y * width + x] = value;
+        }
+
         public void setPath(List<Pos> path)
         {
             this.path = path;

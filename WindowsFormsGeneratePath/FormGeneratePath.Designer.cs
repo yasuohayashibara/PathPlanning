@@ -41,6 +41,9 @@
             this.pictureBoxMap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxMap.TabIndex = 0;
             this.pictureBoxMap.TabStop = false;
+            this.pictureBoxMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMap_MouseMove);
+            this.pictureBoxMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMap_MouseDown);
+            this.pictureBoxMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMap_MouseUp);
             // 
             // FormGeneratePath
             // 
@@ -50,6 +53,7 @@
             this.Controls.Add(this.pictureBoxMap);
             this.Name = "FormGeneratePath";
             this.Text = "GeneratePath";
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.FormGeneratePath_Paint);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMap)).EndInit();
             this.ResumeLayout(false);
 
