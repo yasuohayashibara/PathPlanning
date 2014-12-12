@@ -51,9 +51,9 @@ namespace GeneratePath
             path = new List<PosVel>();
 
             goal_radius = 0.1;
-            left_velocity_d = 0.05;
-            right_velocity_d = 0.05;
-            sampling_time = 0.5;
+            sampling_time = 1.0;
+            left_velocity_d = 0.05 * sampling_time;
+            right_velocity_d = 0.05 * sampling_time;
         }
 
         /// <summary>
@@ -193,6 +193,7 @@ namespace GeneratePath
             return min_no;
         }
 
+
         private int getMapData(double x, double y)
         {
             int xm = (int)(x / unit);
@@ -222,6 +223,7 @@ namespace GeneratePath
         public bool calculatePath()
         {
             const double GOAL_AREA = 0.1;
+            const double MAX_VELOCITY = 1.0;
             List<Node> openList = new List<Node>();             // 計算中のノードを格納するためのリスト
             List<Node> closeList = new List<Node>();            // 計算済みのノードを格納しておくリスト
             // スタートノードとゴールノードを設定
@@ -243,42 +245,44 @@ namespace GeneratePath
                 // ゴールに到着した場合ループを抜ける
                 if (current.getLength(goal_x, goal_y) < GOAL_AREA) break;
 
-                for (double left = -left_velocity_d; left <= left_velocity_d; left += left_velocity_d)
+                for (double right = -right_velocity_d; right <= right_velocity_d; right += right_velocity_d)
                 {
-                    for (double right = -right_velocity_d; right <= right_velocity_d; right += right_velocity_d)
+                    for (double left = -left_velocity_d; left <= left_velocity_d; left += left_velocity_d)
                     {
                         double velocity_left = current.robot.velocity_left + left;
+                        if (velocity_left > MAX_VELOCITY) continue;
                         double velocity_right = current.robot.velocity_right + right;
+                        if (velocity_right > MAX_VELOCITY) continue;
                         if ((velocity_left + velocity_right) <= 0) continue;    // バックをしない
                         
                         twoWheel robot = new twoWheel(current.robot);
                         robot.calculatePosition(velocity_left, velocity_right, sampling_time);
-                        Debug.Write("(" + robot.x.ToString() + ", " + robot.y.ToString() + ") (" + robot.velocity_left.ToString() + ", " + robot.velocity_right.ToString() + ")\n");
                         if ((robot.x >= max_x) || (robot.x < 0) || (robot.y >= max_y) || (robot.y < 0)) continue;
                         if (getMapData(robot.x, robot.y) != 0) continue;
+                        Debug.Write(current.our_num.ToString() + ", " + robot.x.ToString() + ", " + robot.y.ToString() + ", " + robot.velocity_left.ToString() + ", " + robot.velocity_right.ToString() + ", " + current.cost.ToString() + ", " + current.goal_cost.ToString() + "\n");
 
                         Node node = new Node(robot.x, robot.y, robot.the, robot.velocity_left, robot.velocity_right, 0, current.our_num);
                         double xd = robot.x - current.robot.x;
                         double yd = robot.y - current.robot.y;
                         double fd = current.cost + node.calculateGoalCost(goal_x, goal_y) + 0.5 * 0.1;
-//                            + Math.Sqrt(xd * xd + yd * yd) * 0.9;
+//                            + Math.Sqrt(xd * xd + yd * yd) * 2;
                         int n;
                         if (checkExist(openList, robot.x, robot.y, robot.the, robot.velocity_left, robot.velocity_right, out n))
                         {
-                            Debug.Write("openList\n");
                             if (fd < openList[n].getHeuristic())
                             {
-                                openList[n].cost = fd - openList[n].goal_cost;
+//                                Debug.Write("openList\n");
+                                openList[n].cost = fd - node.goal_cost;
                                 openList[n].pre_num = current.our_num;
                             }
                         }
                         else if (checkExist(closeList, robot.x, robot.y, robot.the, robot.velocity_left, robot.velocity_right, out n))
                         {
-                            Debug.Write("closeList\n");
                             if (fd < closeList[n].getHeuristic())
                             {
+//                                Debug.Write("closeList\n");
                                 Node node0 = closeList[n];
-                                node0.cost = fd - closeList[n].goal_cost;
+                                node0.cost = fd - node.goal_cost;
                                 node0.pre_num = current.our_num;
                                 openList.Add(node0);
                                 closeList.RemoveAt(n);
@@ -290,7 +294,7 @@ namespace GeneratePath
                             node1.calculateGoalCost(goal_x, goal_y);
                             node1.cost = fd - node1.goal_cost;
                             openList.Add(node1);
-                            Debug.Write(node_no.ToString() + "\n");
+//                            Debug.Write(node_no.ToString() + "\n");
                         }
                     }
                 }
@@ -302,9 +306,8 @@ namespace GeneratePath
                 pos.x = robot.x;
                 pos.y = robot.y;
                 pos.the = robot.the;
-                pos.xd = robot.xd;
-                pos.yd = robot.yd;
-                pos.thed = robot.thed;
+                pos.velocity_left = robot.velocity_left;
+                pos.velocity_right = robot.velocity_right;
                 path.Add(pos);
                 int n = current.pre_num;
                 if (n == -1) break;

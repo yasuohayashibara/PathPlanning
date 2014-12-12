@@ -267,7 +267,7 @@ namespace AStarSearch
                         {
                             if (fd < openList[n].getHeuristic())
                             {
-                                openList[n].cost = fd - openList[n].goal_cost;
+                                openList[n].cost = fd - node.goal_cost;
                                 openList[n].pre_num = current.our_num;
                             }
                         }
@@ -276,7 +276,7 @@ namespace AStarSearch
                             if (fd < closeList[n].getHeuristic())
                             {
                                 Node node0 = closeList[n];
-                                node0.cost = fd - closeList[n].goal_cost;
+                                node0.cost = fd - node.goal_cost;
                                 node0.pre_num = current.our_num;
                                 openList.Add(node0);
                                 closeList.RemoveAt(n);

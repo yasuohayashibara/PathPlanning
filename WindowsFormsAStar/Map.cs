@@ -31,23 +31,21 @@ namespace GeneratePath
         public double x;
         public double y;
         public double the;
-        public double xd;
-        public double yd;
-        public double thed;
+        public double velocity_left;
+        public double velocity_right;
 
         public PosVel()
         {
-            x = y = the = xd = yd = thed = 0;
+            x = y = the = velocity_left = velocity_right = 0;
         }
 
-        public PosVel(double x, double y, double the, double xd, double yd, double thed)
+        public PosVel(double x, double y, double the, double velocity_left, double velocity_right)
         {
             this.x = x;
             this.y = y;
             this.the = the;
-            this.xd = xd;
-            this.yd = yd;
-            this.thed = thed;
+            this.velocity_left = velocity_left;
+            this.velocity_right = velocity_right;
         }
     }
     
@@ -88,6 +86,7 @@ namespace GeneratePath
             height = 1;
             unit = 0.5;            // 10mmをデフォルトの単位とする．
             path = new List<Pos>();
+            pathWithVel = new List<PosVel>();
         }
 
         /// <summary>

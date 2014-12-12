@@ -29,7 +29,7 @@ namespace WindowsFormsGeneratePath
                 map.setPath(astar.getPath());
                 for (int i = 0; i < path.Count; i++)
                 {
-                    Debug.Write("(" + path[i].x.ToString() + " , " + path[i].y.ToString() + " , " + path[i].the.ToString() + ") ");
+                    Debug.Write("(" + path[i].x.ToString() + " , " + path[i].y.ToString() + " , " + path[i].the.ToString() + " , " + path[i].velocity_left.ToString() + " , " + path[i].velocity_right.ToString() + ")\n");
                 }
             }
             Bitmap bmp = map.getBitmap(100, 100);
